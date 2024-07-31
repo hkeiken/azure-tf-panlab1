@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<config version="10.2.0" urldb="paloaltonetworks" detail-version="10.2.9">
+<config version="10.2.0" urldb="paloaltonetworks" detail-version="10.2.4">
   <devices>
     <entry name="localhost.localdomain">
       <deviceconfig>
@@ -24,7 +24,7 @@
               </recurring>
             </threats>
           </update-schedule>
-          <timezone>Europe/Amsterdam</timezone>
+          <timezone>US/Pacific</timezone>
           <service>
             <disable-telnet>yes</disable-telnet>
             <disable-http>yes</disable-http>
@@ -454,7 +454,7 @@
           <rulebase>
             <security>
               <rules>
-                <entry name="health-check" uuid="4213af5b-47e0-4535-bf2f-59b57b42ff90">
+                <entry name="health-check" uuid="a91152e7-1ea9-441b-b7bc-2ddcf935c328">
                   <to>
                     <member>any</member>
                   </to>
@@ -485,7 +485,7 @@
                     <member>any</member>
                   </source-hip>
                 </entry>
-                <entry name="inbound-web" uuid="19c5ea13-d183-44c6-bb28-ad8f44362660">
+                <entry name="inbound-web" uuid="906ac66f-810d-4b10-a1f3-3ca4de7f5562">
                   <to>
                     <member>trust</member>
                   </to>
@@ -515,7 +515,7 @@
                     <member>any</member>
                   </source-hip>
                 </entry>
-                <entry name="inbound-ssh" uuid="2adaf64c-6262-4bbe-9f4e-8af3b1137483">
+                <entry name="inbound-ssh" uuid="1ef5074f-a01a-4270-9717-c3daf57fc1ea">
                   <to>
                     <member>trust</member>
                   </to>
@@ -545,7 +545,7 @@
                     <member>any</member>
                   </source-hip>
                 </entry>
-                <entry name="trust_out" uuid="212aa7d3-bbeb-43a7-87b5-35fc2e4e299b">
+                <entry name="trust_out" uuid="310d8e1a-8273-469b-b419-716c6d8143d5">
                   <to>
                     <member>untrust</member>
                   </to>
@@ -585,12 +585,12 @@
             </security>
             <default-security-rules>
               <rules>
-                <entry name="interzone-default" uuid="71e2720b-6517-4ab5-a642-1b010f947ff0">
+                <entry name="interzone-default" uuid="3d00ca2f-4af5-40e1-8fad-edd407f1bf59">
                   <action>deny</action>
                   <log-start>no</log-start>
                   <log-end>yes</log-end>
                 </entry>
-                <entry name="intrazone-default" uuid="6f95b044-9ea6-483b-acaf-2d96b1f80ea7">
+                <entry name="intrazone-default" uuid="537e2fbf-aaee-4fe5-bad3-f9552f18d7d8">
                   <action>deny</action>
                   <log-start>no</log-start>
                   <log-end>yes</log-end>
@@ -611,7 +611,7 @@
             </authentication>
             <nat>
               <rules>
-                <entry name="azure-probe-no-nat" uuid="5ec4d019-9e8a-40cb-9869-adfc755776a6">
+                <entry name="azure-probe-no-nat" uuid="4558a2d5-5450-43f9-b6dc-26b54271c8d1">
                   <nat-type>ipv4</nat-type>
                   <from>
                     <member>untrust</member>
@@ -630,7 +630,7 @@
                   <disabled>no</disabled>
                   <description>This NAT policy prevents the public load balancer's health probes from being NATed.</description>
                 </entry>
-                <entry name="inbound-http" uuid="738683de-197b-4350-a9cd-868480cd92c7">
+                <entry name="inbound-http" uuid="f059ba30-01b2-49ad-9ff1-0d2195e3b561">
                   <nat-type>ipv4</nat-type>
                   <from>
                     <member>untrust</member>
@@ -660,7 +660,7 @@
                   </dynamic-destination-translation>
                   <description>NATs inbound request to internal LB in spoke1</description>
                 </entry>
-                <entry name="inbound-ssh" uuid="69e6faf3-dd49-43d1-b680-7c699d08ca6d">
+                <entry name="inbound-ssh" uuid="1858311c-6126-4601-9766-da8d0ba5f7b5">
                   <nat-type>ipv4</nat-type>
                   <from>
                     <member>untrust</member>
@@ -690,7 +690,7 @@
                   </dynamic-destination-translation>
                   <description>NATs inbound request to jump server in Spoke 1.</description>
                 </entry>
-                <entry name="trust-outbound" uuid="cd032b34-8248-47c1-81ff-d739761ba12f">
+                <entry name="trust-outbound" uuid="22f5915e-ac74-4258-aee4-5acd3a44eb87">
                   <to>
                     <member>untrust</member>
                   </to>

@@ -24,3 +24,4 @@ users:
 runcmd:
   - [ip, route, delete, default]
   - [ip, route, add, default, via, 192.168.2.4]
+#  - [sleep, 300]
