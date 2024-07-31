@@ -1,0 +1,26 @@
+#cloud-config
+password: Pal0Alt0
+chpasswd: {expire: False}
+ssh_pwauth: True
+users:
+  - name: admin
+    groups: [ sudo ]
+    sudo:
+      - "ALL=(ALL) NOPASSWD: ALL"
+    shell: /bin/bash
+    lock_passwd: false
+    passwd: "$6$U0BoENnCXQHOf72P$lJWlhfTmOC3QUn9jgL91Ed54K0bEhsyvjVE6MgDgGwybKRg/ZULgsaaWfdTj3ByPouZzlxGjEyJdSDPvoOi60."
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDAnXh/dnzit1n1rOwqv0ehsWIrluhP49GwI+ZVmhEqh4KKIZhwV5K3Fo7JrRHV+eY9X96UV6uqpsdCBHKHGoaI259nQy7I02SSCT1xxMDgdZIceNlTvInh3I5QgPcpk0BfLPeutas1z6Lg3vvnWqlOY/8ARzh
+  - name: palo
+    groups: [ sudo ]
+    sudo:
+      - "ALL=(ALL) NOPASSWD: ALL"
+    shell: /bin/bash
+    lock_passwd: false
+    passwd: "$6$U0BoENnCXQHOf72P$lJWlhfTmOC3QUn9jgL91Ed54K0bEhsyvjVE6MgDgGwybKRg/ZULgsaaWfdTj3ByPouZzlxGjEyJdSDPvoOi60."
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDAnXh/dnzit1n1rOwqv0ehsWIrluhP49GwI+ZVmhEqh4KKIZhwV5K3Fo7JrRHV+eY9X96UV6uqpsdCBHKHGoaI259nQy7I02SSCT1xxMDgdZIceNlTvInh3I5QgPcpk0BfLPeutas1z6Lg3vvnWqlOY/8ARzh
+runcmd:
+  - [ip, route, delete, default]
+  - [ip, route, add, default, via, 192.168.2.4]
