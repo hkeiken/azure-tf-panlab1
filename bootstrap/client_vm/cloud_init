@@ -21,7 +21,140 @@ users:
     passwd: "$6$U0BoENnCXQHOf72P$lJWlhfTmOC3QUn9jgL91Ed54K0bEhsyvjVE6MgDgGwybKRg/ZULgsaaWfdTj3ByPouZzlxGjEyJdSDPvoOi60."
     ssh-authorized-keys:
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDAnXh/dnzit1n1rOwqv0ehsWIrluhP49GwI+ZVmhEqh4KKIZhwV5K3Fo7JrRHV+eY9X96UV6uqpsdCBHKHGoaI259nQy7I02SSCT1xxMDgdZIceNlTvInh3I5QgPcpk0BfLPeutas1z6Lg3vvnWqlOY/8ARzh
+write_files:
+  - content: |
+    version: '2.0'
+    
+    networks:
+      guacnetwork_compose:
+        driver: bridge
+
+    services:
+      guacd:
+        container_name: guacd_compose
+        image: guacamole/guacd
+        networks:
+          guacnetwork_compose:
+        restart: always
+        environment:
+          - GUACD_LOG_LEVEL=debug
+        volumes:
+        - ./guacd/drive:/drive:rw
+        - ./guacd/record:/record:rw
+
+      guacamole:
+        container_name: guacamole_compose
+        depends_on:
+        - guacd
+        environment:
+          GUACD_HOSTNAME: guacd
+          GUACAMOLE_HOME: /config
+        image: guacamole/guacamole
+        links:
+        - guacd
+        networks:
+          guacnetwork_compose:
+        ports:
+        - 8080/tcp
+        restart: always
+        volumes:
+          - ./guacamole/guacamole.properties:/config/guacamole.properties
+          - ./guacamole/user-mapping.xml:/config/user-mapping.xml
+    
+      nginx:
+       container_name: nginx_guacamole_compose
+       restart: always
+       image: nginx
+       volumes:
+       - ./nginx/templates:/etc/nginx/templates:ro
+       - ./nginx/ssl/self.cert:/etc/nginx/ssl/self.cert:ro
+       - ./nginx/ssl/self-ssl.key:/etc/nginx/ssl/self-ssl.key:ro
+       ports:
+       - 443:443
+       links:
+       - guacamole
+       networks:
+         guacnetwork_compose:
+    path: /home/admin/docker-compose.yml
+    permissions: '0644'
+  - content: |    
+      <user-mapping>
+        <authorize username="palo" password="Pal0Alt0">
+          <connection name="panos1-ssh">
+            <protocol>ssh</protocol>
+            <param name="hostname">192.168.122.2</param>
+            <param name="port">22</param>
+            <param name="username">palo</param>
+            <param name="password">Pal0Alt0</param>
+          </connection>
+          <connection name="client1-ssh">
+            <protocol>ssh</protocol>
+            <param name="hostname">192.168.122.3</param>
+            <param name="port">22</param>
+            <param name="username">palo</param>
+            <param name="password">Pal0Alt0</param>
+          </connection>
+          <connection name="hostos-ssh">
+            <protocol>ssh</protocol>
+            <param name="hostname">192.168.122.1</param>
+            <param name="port">22</param>
+            <param name="username">palo</param>
+            <param name="password">Pal0Alt0</param>
+          </connection>
+          <connection name="client1-rdp">
+            <protocol>rdp</protocol>
+            <param name="hostname">192.168.122.3</param>
+            <param name="port">3389</param>
+            <param name="username">palo</param>
+            <param name="password">Pal0Alt0</param>
+            <param name="security">rdp</param>
+            <param name="ignore-cert">true</param>
+          </connection>
+        </authorize>
+        <authorize username="admin" password="Pal0Alt0">
+          <connection name="panos1-ssh">
+            <protocol>ssh</protocol>
+            <param name="hostname">192.168.122.2</param>
+            <param name="port">22</param>
+            <param name="username">palo</param>
+            <param name="password">Pal0Alt0</param>
+          </connection>
+          <connection name="client1-ssh">
+            <protocol>ssh</protocol>
+            <param name="hostname">192.168.122.3</param>
+            <param name="port">22</param>
+            <param name="username">palo</param>
+            <param name="password">Pal0Alt0</param>
+          </connection>
+          <connection name="hostos-ssh">
+            <protocol>ssh</protocol>
+            <param name="hostname">192.168.122.1</param>
+            <param name="port">22</param>
+            <param name="username">admin</param>
+            <param name="password">Pal0Alt0</param>
+          </connection>
+        </authorize>
+      </user-mapping>
+    path: /home/admin/user-mapping.xml
+    permissions: '0644'
+  - content: |
+      enable-environment-properties: true
+    path: /home/admin/guacamole.properties
+    permissions: '0644'
+  - content: |
+      #!/bin/sh
+      mkdir -p /home/admin/guacamole/guacamole
+      mkdir -p /home/admin/guacd/drive
+      mkdir -p /home/admin/guacd/record
+      mv /home/admin/docker-compose.yml /home/admin/guacamole
+      mv /home/admin/user-mapping.xml /home/admin/guacamole/guacamole
+      mv /home/admin/guacamole.properties /home/admin/guacamole/guacamole
+      chown -R admin:admin /home/admin/guacamole
+    path: /home/admin/guacamole-fix.sh
+    permissions: '0644'
 runcmd:
   - [ip, route, delete, default]
   - [ip, route, add, default, via, 192.168.2.4]
-#  - [sleep, 300]
+  - [/home/admin/guacamole-fix.sh]
+  - [sleep, 300]
+  - [apt-get, install, docker.io, docker-compose]
