@@ -100,7 +100,7 @@ resource "azurerm_network_interface" "nic1" {
   name                      = "${var.name}${count.index + 1}-nic1"
   location                  = var.location
   resource_group_name       = var.resource_group_name
-  enable_ip_forwarding      = true
+  ip_forwarding_enabled      = true
 
   ip_configuration {
     name                                    = "ipconfig1"
@@ -115,7 +115,7 @@ resource "azurerm_network_interface" "nic2" {
   name                      = "${var.name}${count.index + 1}-nic2"
   location                  = var.location
   resource_group_name       = var.resource_group_name
-  enable_ip_forwarding      = true
+  ip_forwarding_enabled      = true
 
   ip_configuration {
     name                                    = "ipconfig1"

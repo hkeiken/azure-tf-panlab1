@@ -39,7 +39,9 @@
 #  name                          = "${var.spoke_local_prefix}-rtb"
 #  location                      = azurerm_resource_group.spoke_local_rg.location
 #  resource_group_name           = azurerm_resource_group.spoke_local_rg.name
+#  #bgp_route_propagation_enabled = false
 #  disable_bgp_route_propagation = true
+
 
 #  route {
 #    name                   = "route0"
@@ -72,6 +74,7 @@ resource "azurerm_route_table" "spoke_local_rtb" {
   name                          = "${var.spoke_local_prefix}-rtb"
   location                      = azurerm_resource_group.vmseries_1_rg.location
   resource_group_name           = azurerm_resource_group.vmseries_1_rg.name
+  #bgp_route_propagation_enabled = false
   disable_bgp_route_propagation = true
 
   route {

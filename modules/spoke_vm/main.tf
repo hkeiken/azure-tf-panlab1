@@ -73,7 +73,7 @@ data "template_cloudinit_config" "config" {
   # Main cloud-config configuration file.
   part {
     content_type = "text/cloud-config"
-    content      =  file("${path.module}/bootstrap/client_vm/cloud_init")
+    content      =  file("${path.root}/bootstrap/client_vm/cloud_init")
   }
 }
 

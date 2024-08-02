@@ -24,11 +24,9 @@ users:
 write_files:
   - content: |
     version: '2.0'
-    
     networks:
       guacnetwork_compose:
         driver: bridge
-
     services:
       guacd:
         container_name: guacd_compose
@@ -41,7 +39,6 @@ write_files:
         volumes:
         - ./guacd/drive:/drive:rw
         - ./guacd/record:/record:rw
-
       guacamole:
         container_name: guacamole_compose
         depends_on:
@@ -60,7 +57,6 @@ write_files:
         volumes:
           - ./guacamole/guacamole.properties:/config/guacamole.properties
           - ./guacamole/user-mapping.xml:/config/user-mapping.xml
-    
       nginx:
        container_name: nginx_guacamole_compose
        restart: always
@@ -144,17 +140,27 @@ write_files:
   - content: |
       #!/bin/sh
       mkdir -p /home/admin/guacamole/guacamole
-      mkdir -p /home/admin/guacd/drive
-      mkdir -p /home/admin/guacd/record
+      mkdir -p /home/admin/guacamole/guacd/drive
+      mkdir -p /home/admin/guacamole/guacd/record
       mv /home/admin/docker-compose.yml /home/admin/guacamole
       mv /home/admin/user-mapping.xml /home/admin/guacamole/guacamole
       mv /home/admin/guacamole.properties /home/admin/guacamole/guacamole
       chown -R admin:admin /home/admin/guacamole
     path: /home/admin/guacamole-fix.sh
-    permissions: '0644'
+    permissions: '0744'
+  - content: |    
+      docker load -i /opt/lab/docker-bin/guacamole-guacd
+      docker load -i /opt/lab/docker-bin/guacamole-guacamole
+      docker load -i /opt/lab/docker-bin/nginx 
+      systemctl restart docker
+      docker-compose --project-directory /home/admin/guacamole -f /home/admin/guacamole/docker-compose.yml up -d
+    path: /home/admin/guacamole-start.sh
+    permissions: '0744'
 runcmd:
   - [ip, route, delete, default]
   - [ip, route, add, default, via, 192.168.2.4]
   - [/home/admin/guacamole-fix.sh]
   - [sleep, 300]
+  - [apt-get, update]
   - [apt-get, install, docker.io, docker-compose]
+  - [/home/admin/guacamole-start.sh]
