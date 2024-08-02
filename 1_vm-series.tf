@@ -26,7 +26,7 @@ resource "random_string" "vmseries_1" {
 }
 
 resource "azurerm_storage_account" "vmseries_1_storage" {
-  name                     = "inbound${random_string.vmseries_1.result}"
+  name                     = "${var.vmseries_1_prefix}${random_string.vmseries_1.result}"
   resource_group_name      = azurerm_resource_group.vmseries_1_rg.name
   location                 = azurerm_resource_group.vmseries_1_rg.location
   account_tier             = "Standard"
@@ -40,7 +40,7 @@ module "vmseries_1_fileshare" {
   quota                = 1
   storage_account_name = azurerm_storage_account.vmseries_1_storage.name
   storage_account_key  = azurerm_storage_account.vmseries_1_storage.primary_access_key
-  local_file_path        = "bootstrap/vmseries_1_fw/"
+  local_file_path      = "/bootstrap/vmseries_1_fw"
 }
 
 
